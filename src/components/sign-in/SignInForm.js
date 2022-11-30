@@ -1,19 +1,35 @@
+import { useState } from "react";
 import { 
-    signInWithGooglePopup, 
-    createUserDocFromAuth,
+    signInWithGooglePopup,
     signInUserWithEmailAndPassword 
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/FormInput";
 import Button from "../button/Button";
 import './SignInForm.styles.scss'
 
-const SignInForm = ({ handleChange, resetFormFields, email, password }) => {
+const defaultFormValues = {
+    email: '',
+    password: '',
+}
+
+const SignInForm = () => {
+    const [formFields, setFormFields] = useState(defaultFormValues);
+    const { email, password } = formFields;
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormFields({...formFields, [name]: value})
+    };
+
+    const resetFormFields = () => {
+        setFormFields(defaultFormValues);
+    };
+
     const handleSignIn = async (event) => {
         event.preventDefault();
 
         try {
-            const user = await signInUserWithEmailAndPassword(email, password);
-            console.log(user, 'success')
+            await signInUserWithEmailAndPassword(email, password);
             resetFormFields();
         } catch (err) {
             if(err.code === 'auth/wrong-password') {
@@ -26,9 +42,8 @@ const SignInForm = ({ handleChange, resetFormFields, email, password }) => {
         }
     }
 
-    const logGoogleUser = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocFromAuth(user);
+    const loginGoogleUser = async () => {
+        await signInWithGooglePopup();  
     }
 
     return (
@@ -53,7 +68,7 @@ const SignInForm = ({ handleChange, resetFormFields, email, password }) => {
                     />
             <div className='buttons-container'>
                 <Button onClick={handleSignIn} type='submit'>Sign in</Button>
-                <Button onClick={logGoogleUser} buttonType='google' type='button'>Google Sign In</Button>
+                <Button onClick={loginGoogleUser} buttonType='google' type='button'>Google Sign In</Button>
             </div>
         </div>
     )

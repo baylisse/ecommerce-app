@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { 
     createAuthUserWithEmailAndPassword,
     createUserDocFromAuth
@@ -6,16 +7,25 @@ import FormInput from '../form-input/FormInput';
 import Button from '../button/Button';
 import './SignUpForm.styles.scss'
 
+const defaultFormValues = {
+    displayName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+}
 
+const SignUpForm = () => {
+    const [formFields, setFormFields] = useState(defaultFormValues);
+    const { displayName, email, password, confirmPassword } = formFields;
 
-const SignUpForm = ({ 
-    handleChange, 
-    resetFormFields, 
-    displayName, 
-    email, 
-    password, 
-    confirmPassword 
-}) => {
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormFields({...formFields, [name]: value})
+    };
+
+    const resetFormFields = () => {
+        setFormFields(defaultFormValues);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
