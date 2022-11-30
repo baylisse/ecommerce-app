@@ -6,12 +6,7 @@ import { UserContext } from "../../contexts/UserContext";
 import './NavBar.styles.scss';
 
 const NavBar = () => {
-    const { currentUser, setCurrentUser } = useContext(UserContext);
-
-    const signOutHandler = async () => {
-        await signOutUser();
-        setCurrentUser(null);
-    };
+    const { currentUser } = useContext(UserContext);
 
     return (
         <>
@@ -23,10 +18,9 @@ const NavBar = () => {
                     <Link className='nav-link' to='/shop'>
                         SHOP
                     </Link>
-                    {console.log(currentUser)}
                     {
                         currentUser ? (
-                            <span className='nav-link' onClick={signOutHandler}>LOGOUT</span>
+                            <span className='nav-link' onClick={signOutUser}>LOGOUT</span>
                          ) : (
                             <Link className='nav-link' to='/login'>
                                 LOGIN
